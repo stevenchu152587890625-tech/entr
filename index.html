@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="ultra">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RKrint // C Entrance — Node Gateway</title>
+<meta name="description" content="RKrint — C Entrance · a single gateway to NEXUS, RELAY, FOUNDRY, ZERO, PULSE, VAULT & NIMBUS. Select a node to jump straight to the service." />
+<meta name="keywords" content="RKrint, Cyber, Gateway, NEXUS, RELAY, FOUNDRY, ZERO, PULSE, VAULT, NIMBUS" />
+<meta id="metaTheme" name="theme-color" content="#0b0016" />
+<link rel="canonical" href="https://rkrint.com/" />
+<!-- Open Graph / sharing -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RKrint" />
+<meta property="og:title" content="RKrint // C Entrance — Node Gateway" />
+<meta property="og:description" content="One gateway to 7 RKrint transport nodes. No login, no waiting — jump straight to your destination." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="RKrint // C Entrance — Node Gateway" />
+<meta name="twitter:description" content="One gateway to 7 RKrint transport nodes. Jump straight to your destination." />
+<!-- favicon: marathon "O" ring logo, inline SVG (swapped by the theme engine) -->
+<link id="fav" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230b0016'/%3E%3Ccircle cx='50' cy='50' r='39' fill='none' stroke='%23D6FF00' stroke-width='14'/%3E%3Crect x='44' y='80' width='12' height='14' fill='%230b0016'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<!-- resolve the saved theme BEFORE first paint to avoid a colour flash -->
+<script>
+(function(){
+  var v = 'ultra';
+  try{
+    var s = localStorage.getItem('rk-theme');
+    if(!s){ var m = location.hash.match(/theme=(ultra|light|dark)/); if(m) s = m[1]; }
+    if(s === 'ultra' || s === 'light' || s === 'dark') v = s;
+  }catch(e){}
+  document.documentElement.setAttribute('data-theme', v);
+  document.documentElement.classList.add('js');
+})();
+</script>
+<style>
+  /* ============================================================
+     THREE COLOUR MODES IN ONE FILE
+       [data-theme="ultra"]  — original purple + lime on deep ink
+       [data-theme="light"]  — pure #000 / #fff / #f00 · WHITE bg
+       [data-theme="dark"]   — pure #000 / #fff / #f00 · BLACK bg
+     Every colour in the stylesheet resolves through these tokens,
+     so switching the attribute on <html> recolours the whole page.
+     ============================================================ */
+  :root{
+    --radius:14px;
+    --sx:50%; --sy:50%;
+  }
+
+  /* ---------- MODE 1 · ULTRA (original purple / lime) ---------- */
+  [data-theme="ultra"]{
+    --bg:#0b0016;
+    --fg:#efe9ff;
+    --muted:rgba(233,225,255,.62);
+    --muted-2:rgba(233,225,255,.38);
+    --accent:#d6ff00;
+    --accent-glow:rgba(214,255,0,.55);
+    --accent-2:#7a2cff;
+    --line:rgba(214,255,0,.22);
+    --line-soft:rgba(214,255,0,.10);
+    --track:rgba(214,255,0,.06);
+    --grid:rgba(214,255,0,.05);
+    --panel:rgba(11,0,22,.55);
+    --panel-solid:#0b0016;
+    --panel-img:linear-gradient(180deg,rgba(214,255,0,.04),transparent 30%),linear-gradient(160deg,rgba(90,0,255,.08),transparent 50%);
+    --strip:#0b0016;
+    --on-accent:#0b0016;
+    --sheen:rgba(255,255,255,.6);
+    --focus:#7a2cff;
+    --ticker-bg:rgba(11,0,22,.75);
+    --tile-tint:linear-gradient(150deg,rgba(90,0,255,.35),transparent 70%);
+    --spot:radial-gradient(120px circle at var(--sx) var(--sy), rgba(214,255,0,.30), transparent 60%);
+    --mx-img:linear-gradient(160deg,rgba(90,0,255,.10),transparent 60%);
+    --act-bg:linear-gradient(160deg,#1c0a33,#0b0016);
+    --act-border:var(--accent);
+    --act-fg:var(--fg);
+    --act-sub:var(--muted);
+    --act-ic:var(--accent);
+    --act-shadow:0 0 0 1px rgba(214,255,0,.28),0 0 34px rgba(214,255,0,.18),0 20px 40px rgba(0,0,0,.5);
+    --act-spot:var(--spot);
+    --prog-bg:linear-gradient(90deg,#d6ff00,#7a2cff);
+    --vstrip-shadow:-10px 0 40px rgba(0,0,0,.6);
+    --viz-bg:radial-gradient(600px 500px at 70% 40%,rgba(90,0,255,.35),transparent 70%),linear-gradient(180deg,#160726,#0b0016);
+    --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --noise-op:.06;
+    --scan-bg:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
+    --scan-op:.4;
+    --scan-blend:overlay;
+    --vign:inset 0 0 240px rgba(0,0,0,.72);
+    --bg-fx:radial-gradient(1000px 800px at 80% 6%, rgba(90,0,255,.30), transparent 62%),radial-gradient(900px 700px at 10% 94%, rgba(122,44,255,.20), transparent 58%),linear-gradient(180deg,#12001f 0%,#0b0016 100%);
+    --boot-grid:rgba(214,255,0,.06);
+    --boot-glow:radial-gradient(circle,rgba(214,255,0,.16),transparent 62%);
+    --boot-tear1:#7a2cff;
+    --boot-tear2:#ffffff;
+    --glitch-a:#7a2cff;
+    --glitch-b:#d6ff00;
+    --marker:#7a2cff;
+    --scroll-thumb-c:#5a00ff;
+    --scroll-thumb-bg:linear-gradient(90deg,#5a00ff,#d6ff00);
+  }
+
+  /* ---------- MODE 2 · LIGHT (pure black / white / red · white bg) ---------- */
+  [data-theme="light"]{
+    --bg:#ffffff;
+    --fg:#000000;
+    --muted:rgba(0,0,0,.62);
+    --muted-2:rgba(0,0,0,.36);
+    --accent:#ff0000;
+    --accent-glow:rgba(255,0,0,.55);
+    --accent-2:var(--muted);
+    --line:rgba(0,0,0,.30);
+    --line-soft:rgba(0,0,0,.10);
+    --track:rgba(0,0,0,.06);
+    --grid:rgba(255,0,0,.09);
+    --panel:rgba(255,255,255,.72);
+    --panel-solid:#ffffff;
+    --panel-img:linear-gradient(180deg,rgba(255,0,0,.03),transparent 30%),linear-gradient(160deg,rgba(0,0,0,.02),transparent 50%);
+    --strip:#ffffff;
+    --on-accent:#ffffff;
+    --sheen:rgba(255,255,255,.55);
+    --focus:#000000;
+    --ticker-bg:rgba(255,255,255,.82);
+    --tile-tint:linear-gradient(150deg,rgba(255,0,0,.14),transparent 70%);
+    --spot:radial-gradient(120px circle at var(--sx) var(--sy), rgba(255,0,0,.14), transparent 60%);
+    --mx-img:linear-gradient(160deg,rgba(255,0,0,.05),transparent 60%);
+    --act-bg:#ff0000;
+    --act-border:#ff0000;
+    --act-fg:#ffffff;
+    --act-sub:rgba(255,255,255,.82);
+    --act-ic:#ffffff;
+    --act-shadow:0 0 0 1px #ff0000,0 0 34px rgba(255,0,0,.24),0 20px 40px rgba(0,0,0,.12);
+    --act-spot:radial-gradient(120px circle at var(--sx) var(--sy), rgba(255,255,255,.26), transparent 60%);
+    --prog-bg:#ff0000;
+    --vstrip-shadow:-10px 0 40px rgba(0,0,0,.18);
+    --viz-bg:radial-gradient(600px 500px at 70% 40%,rgba(255,0,0,.10),transparent 70%),#ffffff;
+    --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --noise-op:.05;
+    --scan-bg:repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px);
+    --scan-op:.6;
+    --scan-blend:multiply;
+    --vign:inset 0 0 240px rgba(0,0,0,.10);
+    --bg-fx:radial-gradient(1100px 820px at 78% 8%, rgba(255,0,0,.10), transparent 62%),radial-gradient(950px 760px at 12% 92%, rgba(255,0,0,.07), transparent 58%),linear-gradient(180deg,#ffffff 0%,#ffffff 100%);
+    --boot-grid:rgba(255,0,0,.10);
+    --boot-glow:radial-gradient(circle,rgba(255,0,0,.14),transparent 62%);
+    --boot-tear1:#000000;
+    --boot-tear2:rgba(0,0,0,.35);
+    --glitch-a:rgba(0,0,0,.45);
+    --glitch-b:#ff0000;
+    --marker:#ff0000;
+    --scroll-thumb-c:#ff0000;
+    --scroll-thumb-bg:#ff0000;
+  }
+
+  /* ---------- MODE 3 · DARK (pure black / white / red · black bg) ---------- */
+  [data-theme="dark"]{
+    --bg:#000000;
+    --fg:#ffffff;
+    --muted:rgba(255,255,255,.62);
+    --muted-2:rgba(255,255,255,.34);
+    --accent:#ff0000;
+    --accent-glow:rgba(255,0,0,.60);
+    --accent-2:var(--muted);
+    --line:rgba(255,255,255,.30);
+    --line-soft:rgba(255,255,255,.10);
+    --track:rgba(255,255,255,.08);
+    --grid:rgba(255,0,0,.14);
+    --panel:rgba(0,0,0,.55);
+    --panel-solid:#000000;
+    --panel-img:linear-gradient(180deg,rgba(255,0,0,.05),transparent 30%),linear-gradient(160deg,rgba(255,255,255,.03),transparent 50%);
+    --strip:#000000;
+    --on-accent:#ffffff;
+    --sheen:rgba(255,255,255,.55);
+    --focus:#ffffff;
+    --ticker-bg:rgba(0,0,0,.72);
+    --tile-tint:linear-gradient(150deg,rgba(255,0,0,.22),transparent 70%);
+    --spot:radial-gradient(120px circle at var(--sx) var(--sy), rgba(255,0,0,.24), transparent 60%);
+    --mx-img:linear-gradient(160deg,rgba(255,0,0,.12),transparent 60%);
+    --act-bg:#ff0000;
+    --act-border:#ff0000;
+    --act-fg:#ffffff;
+    --act-sub:rgba(255,255,255,.85);
+    --act-ic:#ffffff;
+    --act-shadow:0 0 0 1px #ff0000,0 0 34px rgba(255,0,0,.30),0 20px 40px rgba(0,0,0,.55);
+    --act-spot:radial-gradient(120px circle at var(--sx) var(--sy), rgba(255,255,255,.28), transparent 60%);
+    --prog-bg:#ff0000;
+    --vstrip-shadow:-10px 0 40px rgba(0,0,0,.6);
+    --viz-bg:radial-gradient(600px 500px at 70% 40%,rgba(255,0,0,.20),transparent 70%),#000000;
+    --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' fill='%23ffffff'/%3E%3C/svg%3E");
+    --noise-op:.06;
+    --scan-bg:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
+    --scan-op:.4;
+    --scan-blend:overlay;
+    --vign:inset 0 0 240px rgba(0,0,0,.72);
+    --bg-fx:radial-gradient(1100px 820px at 78% 8%, rgba(255,0,0,.20), transparent 62%),radial-gradient(950px 760px at 12% 92%, rgba(255,0,0,.14), transparent 58%),linear-gradient(180deg,#000000 0%,#000000 100%);
+    --boot-grid:rgba(255,0,0,.14);
+    --boot-glow:radial-gradient(circle,rgba(255,0,0,.20),transparent 62%);
+    --boot-tear1:#ffffff;
+    --boot-tear2:rgba(255,255,255,.35);
+    --glitch-a:#ffffff;
+    --glitch-b:#ff0000;
+    --marker:#ff0000;
+    --scroll-thumb-c:#ff0000;
+    --scroll-thumb-bg:#ff0000;
+  }
+
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Chakra Petch',system-ui,sans-serif;
+    color:var(--fg);
+    background:var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+    letter-spacing:.02em;
+    transition:background-color .4s ease, color .4s ease;
+  }
+
+  /* soft colour cross-fade while the mode is being switched */
+  html.switching *{
+    transition:background-color .4s ease, color .4s ease, border-color .4s ease,
+               box-shadow .4s ease, fill .4s ease, opacity .4s ease;
+  }
+
+  /* ===== layered background (CSS fallback when WebGL unavailable) ===== */
+  .bg{
+    position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:var(--bg-fx);
+  }
+  .grid{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:46px 46px;
+    mask-image:radial-gradient(ellipse 90% 90% at 50% 30%, #000 30%, transparent 80%);
+    -webkit-mask-image:radial-gradient(ellipse 90% 90% at 50% 30%, #000 30%, transparent 80%);
+    animation:gridDrift 18s linear infinite;
+  }
+  @keyframes gridDrift{to{background-position:46px 0,46px 0}}
+
+  /* ===== WebGL canvas replaces the above when active ===== */
+  #gl{position:fixed;inset:0;z-index:-3;pointer-events:none;display:none;width:100vw;height:100vh}
+  body.webgl #gl{display:block}
+  body.webgl .bg,body.webgl .grid{display:none}
+
+  .scanlines{
+    position:fixed;inset:0;z-index:50;pointer-events:none;opacity:var(--scan-op);mix-blend-mode:var(--scan-blend);
+    background:var(--scan-bg);
+  }
+  .vignette{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    box-shadow:var(--vign);
+  }
+  .noise{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--noise-op);
+    background-image:var(--noise);
+    animation:grain 1.6s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-2%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(0,0)}}
+
+  /* ---- layout ---- */
+  .wrap{
+    max-width:1180px;margin:0 auto;padding:98px clamp(18px,4vw,56px) 70px;
+    position:relative;z-index:5;
+  }
+
+  /* ---- top marquee ticker ---- */
+  .ticker{
+    position:fixed;top:0;left:0;right:0;height:30px;z-index:60;overflow:hidden;
+    background:var(--ticker-bg);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;white-space:nowrap;
+  }
+  .ticker-track{display:inline-flex;align-items:center;will-change:transform;animation:tick 28s linear infinite}
+  .ticker-track span{
+    font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;
+    color:var(--muted);padding:0 26px;display:inline-flex;align-items:center;gap:12px;
+  }
+  .ticker-track span b{color:var(--accent);font-weight:400}
+  .ticker-track span::after{content:"\25AE";color:var(--marker);opacity:.5;margin-left:26px}
+  @keyframes tick{to{transform:translateX(-50%)}}
+
+  /* ---- top HUD bar ---- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    padding:14px 0 20px;border-bottom:1px solid var(--line);
+    font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;
+    color:var(--muted);text-transform:uppercase;
+  }
+  .topbar .left{display:flex;align-items:center;gap:14px}
+  .pulse{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent),0 0 22px var(--accent);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .topbar .right{display:flex;gap:10px;align-items:center;color:var(--accent)}
+  .topbar .right span{opacity:.75}
+  .snd{
+    background:none;border:1px solid var(--line);color:var(--accent);cursor:pointer;
+    font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.12em;padding:3px 8px;border-radius:4px;
+    display:inline-flex;align-items:center;gap:6px;transition:.2s;text-transform:uppercase;
+  }
+  .snd:hover{border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+  .snd[aria-pressed="true"]{opacity:.5}
+  .snd:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---- THEME SWITCHER (ULTRA / WHITE / BLACK) ---- */
+  .thm{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .thm-b{
+    background:none;border:none;border-right:1px solid var(--line);color:var(--muted);
+    font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.14em;
+    padding:4px 9px;cursor:pointer;transition:.2s;text-transform:uppercase;
+  }
+  .thm-b:last-child{border-right:none}
+  .thm-b:hover{color:var(--accent)}
+  .thm-b[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+  .thm-b:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+  /* ---- hero ---- */
+  .hero{padding:clamp(26px,5vw,52px) 0 clamp(18px,4vw,40px)}
+  .eyebrow{
+    font-family:'Share Tech Mono',monospace;color:var(--accent);letter-spacing:.4em;
+    text-transform:uppercase;font-size:clamp(11px,1.4vw,14px);display:flex;align-items:center;gap:12px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--accent);display:inline-block}
+  .brand{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(54px,13vw,150px);
+    line-height:.86;letter-spacing:-.01em;text-transform:uppercase;
+    display:flex;align-items:center;gap:clamp(16px,3vw,34px);flex-wrap:wrap;
+  }
+  .brand .word{position:relative;display:inline-block;animation:glitch 6s infinite steps(1)}
+  @keyframes glitch{
+    0%,90%,100%{text-shadow:0 0 0 transparent;transform:none}
+    91%{text-shadow:-4px 0 var(--glitch-a),4px 0 var(--glitch-b);transform:translateX(1px)}
+    92%{text-shadow:4px 0 var(--glitch-a),-4px 0 var(--glitch-b);transform:translateX(-1px)}
+    93%{text-shadow:0 0 0 transparent;transform:none}
+    94%{text-shadow:-2px 0 var(--glitch-a),2px 0 var(--glitch-b);transform:translateX(1px)}
+    95%{text-shadow:0 0 0 transparent;transform:none}
+  }
+  .brand .word em{font-style:normal;color:var(--accent)}
+  .logo-orb{flex:0 0 auto;width:clamp(64px,12vw,120px);height:clamp(64px,12vw,120px);animation:orb float 7s ease-in-out infinite;color:var(--fg)}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .brand-strip{
+    margin-top:clamp(18px,3vw,30px);display:inline-flex;align-items:center;gap:16px;
+    background:var(--strip);border:1px solid var(--line);padding:12px 18px;border-radius:6px;
+    clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  }
+  .brand-strip .sub{font-family:'Chakra Petch';font-weight:600;color:var(--accent);letter-spacing:.3em;text-transform:uppercase;font-size:clamp(13px,1.8vw,17px)}
+  .brand-strip .div{width:1px;height:20px;background:var(--accent)}
+  .brand-strip .num{font-family:'Share Tech Mono';color:var(--muted);font-size:13px;letter-spacing:.2em}
+  .hero p.tag{max-width:640px;margin-top:20px;color:var(--muted);line-height:1.7;font-size:clamp(14px,1.6vw,17px)}
+
+  /* ---- section titles ---- */
+  .sect{display:flex;align-items:center;gap:16px;margin:40px 0 22px}
+  .sect .bar{width:8px;height:30px;background:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
+  .sect h2{font-family:'Anton';text-transform:uppercase;letter-spacing:.06em;font-size:clamp(20px,3vw,30px)}
+  .sect .idx{font-family:'Share Tech Mono';color:var(--accent-2);letter-spacing:.2em;font-size:14px;margin-left:auto}
+
+  /* ---- premium TAB NAV ---- */
+  .tabnav{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:10px;position:sticky;top:10px;z-index:20;
+  }
+  .tab{
+    position:relative;border:1px solid var(--line);background:var(--panel);
+    border-radius:var(--radius);overflow:hidden;cursor:pointer;text-align:left;
+    padding:16px 14px 14px;min-height:120px;transition:background .26s,border-color .26s,box-shadow .26s,color .26s;
+    -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+    font-family:'Chakra Petch';color:var(--fg);transform-style:preserve-3d;will-change:transform;
+  }
+  .tab::before{
+    content:"";position:absolute;inset:0;background:var(--tile-tint);
+    opacity:0;transition:opacity .26s;z-index:0;
+  }
+  .tab::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0;transition:opacity .3s;
+    background:var(--spot);
+  }
+  .tab:hover::after{opacity:1}
+  .tab .corner{position:absolute;width:12px;height:12px;border:1px solid var(--accent);border-top:none;border-left:none;bottom:8px;right:8px;opacity:.5;transition:opacity .26s,border-color .26s}
+  .tab .corner::before{content:"";position:absolute;width:7px;height:1px;background:var(--accent);right:0;bottom:-4px}
+  .tab>*{position:relative;z-index:2}
+  .tab .n{font-family:'Share Tech Mono';color:var(--muted);font-size:12px;letter-spacing:.2em;opacity:.9}
+  .tab .ic{width:34px;height:34px;margin:8px 0 12px;color:var(--accent);transition:transform .3s,color .26s;display:block}
+  .tab .ic svg{width:100%;height:100%}
+  .tab .t{font-family:'Anton';text-transform:uppercase;letter-spacing:.05em;font-size:15px;line-height:1.1;position:relative}
+  .tab .t small{display:block;font-family:'Chakra Petch';font-weight:500;font-size:10.5px;letter-spacing:.16em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+  .tab .go{position:absolute;bottom:10px;left:14px;right:14px;display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.18em;color:var(--accent);opacity:0;transform:translateY(6px);transition:.3s}
+  .tab:hover .ic{transform:translateY(-3px)}
+  .tab:hover .corner{opacity:1}
+  .tab.is-active{
+    border-color:var(--act-border);
+    background:var(--act-bg);
+    color:var(--act-fg);
+    box-shadow:var(--act-shadow);
+  }
+  .tab.is-active::before{opacity:.35}
+  .tab.is-active::after{background:var(--act-spot)}
+  .tab.is-active .corner{opacity:1;border-color:var(--act-ic)}
+  .tab.is-active .corner::before{background:var(--act-ic)}
+  .tab.is-active .n{color:var(--act-sub)}
+  .tab.is-active .ic{color:var(--act-ic)}
+  .tab.is-active .t small{color:var(--act-sub)}
+  .tab.is-active .go{opacity:1;transform:none;color:var(--act-ic)}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .tab[aria-selected="true"]{border-color:var(--act-border)}
+
+  /* ---- detail panel (glassmorphism) ---- */
+  .panel{
+    margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--panel);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    overflow:hidden;position:relative;
+    background-image:var(--panel-img);
+  }
+  .panel .inner{display:grid;grid-template-columns:1.1fr .9fr;gap:0;min-height:300px}
+  .panel .info{padding:clamp(22px,4vw,46px)}
+  .panel .info .kick{font-family:'Share Tech Mono';color:var(--accent-2);letter-spacing:.3em;font-size:12px;text-transform:uppercase;margin-bottom:16px;display:flex;gap:10px;align-items:center}
+  .panel .info .kick::after{content:"////";color:var(--accent);opacity:.6;letter-spacing:.1em}
+  .panel .info h3{font-family:'Anton';text-transform:uppercase;letter-spacing:.04em;font-size:clamp(28px,5vw,52px);line-height:.95}
+  .panel .info h3 em{color:var(--accent);font-style:normal}
+  .panel .info p.desc{margin:18px 0 26px;color:var(--muted);line-height:1.7;max-width:520px;font-size:clamp(14px,1.5vw,16px)}
+  .panel .meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:28px;font-family:'Share Tech Mono';font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+  .panel .meta b{color:var(--accent);font-weight:400}
+  .enter{
+    display:inline-flex;align-items:center;gap:14px;text-decoration:none;
+    font-family:'Anton';text-transform:uppercase;letter-spacing:.08em;font-size:18px;
+    color:var(--on-accent);background:var(--accent);padding:16px 26px;border-radius:6px;
+    clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+    box-shadow:0 0 30px var(--accent-glow);transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden;will-change:transform;
+    cursor:pointer;
+  }
+  .enter::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--sheen),transparent);transform:translateX(-120%);animation:sheen 3.2s ease-in-out infinite;pointer-events:none}
+  @keyframes sheen{0%,60%,100%{transform:translateX(-120%)}80%{transform:translateX(120%)}}
+  .enter:hover{box-shadow:0 0 52px var(--accent-glow)}
+  .enter:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  .enter .arr{font-family:'Share Tech Mono';font-size:20px}
+  .panel .url{font-family:'Share Tech Mono';font-size:13px;letter-spacing:.06em;color:var(--muted);margin-top:16px;word-break:break-all}
+  .panel .url b{color:var(--fg)}
+  .panel .url::before{content:"> ";color:var(--accent)}
+
+  .panel .visual{position:relative;background:var(--viz-bg);border-left:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:30px;overflow:hidden}
+  .panel .visual .orb{width:clamp(150px,24vw,250px);height:clamp(150px,24vw,250px);color:var(--accent);animation:orb float 6s ease-in-out infinite}
+  @keyframes orb{0%,100%{transform:rotate(0)}50%{transform:rotate(90deg)}}
+  .panel .visual .code{position:absolute;bottom:14px;left:18px;font-family:'Share Tech Mono';font-size:11px;letter-spacing:.18em;color:var(--accent-2);opacity:.8}
+  .panel .visual .scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent,var(--accent),transparent);height:1px;opacity:.30;animation:scanMove 4s linear infinite}
+  @keyframes scanMove{0%{top:-2%}100%{top:102%}}
+
+  /* ---- PRODUCT MATRIX (dashboard / horizontal compare) ---- */
+  .matrix-wrap{position:relative}
+  .matrix{
+    display:flex;gap:14px;overflow-x:auto;padding:8px 2px 18px;scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb-c) transparent;
+  }
+  .matrix::-webkit-scrollbar{height:8px}
+  .matrix::-webkit-scrollbar-thumb{background:var(--scroll-thumb-bg);border-radius:4px}
+  .matrix::-webkit-scrollbar-track{background:var(--line-soft)}
+  .mx{
+    flex:0 0 210px;scroll-snap-align:start;border:1px solid var(--line);border-radius:12px;
+    background:var(--panel);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    padding:16px 16px 14px;position:relative;overflow:hidden;will-change:transform;
+    background-image:var(--mx-img);
+  }
+  .mx::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+    background:var(--spot)}
+  .mx:hover::after{opacity:1}
+  .mx>*{position:relative;z-index:2}
+  .mx .mh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .mx .mnum{font-family:'Share Tech Mono';color:var(--accent-2);font-size:11px;letter-spacing:.18em}
+  .mx .mname{font-family:'Anton';text-transform:uppercase;font-size:19px;line-height:1;margin:8px 0 2px}
+  .mx .mkey{font-family:'Chakra Petch';font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+  .mx .mkey b{color:var(--accent);font-weight:500}
+  .mbar{margin:12px 0 4px}
+  .mbar .lbl{display:flex;justify-content:space-between;font-family:'Share Tech Mono';font-size:9.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+  .mbar .lbl em{font-style:normal;color:var(--accent)}
+  .mbar .trk{height:5px;border-radius:3px;background:var(--line-soft);overflow:hidden;position:relative}
+  .mbar .fill{height:100%;width:0;border-radius:3px;background:var(--accent);box-shadow:0 0 10px var(--accent-glow);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .mx .mxgo{margin-top:12px;display:inline-flex;align-items:center;gap:6px;font-family:'Share Tech Mono';font-size:10.5px;letter-spacing:.16em;color:var(--accent);text-decoration:none;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;padding:6px 10px;transition:.2s}
+  .mx .mxgo:hover{border-color:var(--accent);box-shadow:0 0 14px var(--accent-glow)}
+  .matrix-nav{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px}
+  .matrix-nav button{background:var(--panel);border:1px solid var(--line);color:var(--accent);cursor:pointer;
+    font-family:'Share Tech Mono';font-size:13px;padding:6px 12px;border-radius:5px;transition:.2s}
+  .matrix-nav button:hover{border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+  .matrix-nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .mx:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* ---- footer ---- */
+  footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;font-family:'Share Tech Mono';font-size:12px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  footer .z{color:var(--accent)}
+  footer .links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+  footer a{color:var(--muted);text-decoration:none;transition:color .2s}
+  footer a:hover{color:var(--accent)}
+  footer .hint{opacity:.55;font-size:10px;letter-spacing:.2em}
+
+  /* ---- vertical MARATHON strip ---- */
+  .vstrip{
+    position:fixed;top:0;right:0;height:100vh;width:clamp(44px,5vw,66px);z-index:6;
+    background:var(--accent);display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow:var(--vstrip-shadow);
+  }
+  .vstrip span{
+    writing-mode:vertical-rl;font-family:'Anton';color:var(--on-accent);text-transform:uppercase;
+    font-size:clamp(26px,4vw,44px);letter-spacing:.04em;white-space:nowrap;
+  }
+
+  /* the orb notch must always match the page background */
+  .orb-cut{fill:var(--bg)}
+
+  /* ---- responsive ---- */
+  @media(max-width:960px){
+    .tabnav{grid-template-columns:repeat(3,1fr)}
+    .panel .inner{grid-template-columns:1fr}
+    .panel .visual{border-left:none;border-top:1px solid var(--line);min-height:220px}
+    .vstrip span{font-size:24px}
+  }
+  @media(max-width:540px){
+    .tabnav{grid-template-columns:repeat(2,1fr)}
+    .tab{min-height:106px}
+    .vstrip{display:none}
+    .enter{width:100%;justify-content:center}
+    .wrap{padding-top:88px}
+  }
+
+  /* ============================================================
+     AUTO MOBILE / DESKTOP VERSION SWITCH (browser ratio detect)
+     ============================================================ */
+  [data-mode="mobile"] .vstrip{display:none}
+  [data-mode="mobile"] .topbar{font-size:11px}
+  [data-mode="mobile"] .thm-b{padding:3px 7px;font-size:9px}
+  [data-mode="mobile"] .brand{font-size:clamp(44px,16vw,84px);gap:16px}
+  [data-mode="mobile"] .logo-orb{width:52px;height:52px}
+  [data-mode="mobile"] .brand-strip .sub{font-size:12px;letter-spacing:.22em}
+  [data-mode="mobile"] .tag{font-size:14px}
+  [data-mode="mobile"] .ticker{height:26px}
+
+  [data-mode="mobile"] .tabnav{grid-template-columns:1fr;gap:12px;position:static;margin-top:8px}
+  [data-mode="mobile"] .tab{
+    display:flex;align-items:center;gap:16px;min-height:auto;
+    padding:18px 20px;text-align:left;
+  }
+  [data-mode="mobile"] .tab .n{display:none}
+  [data-mode="mobile"] .tab .ic{width:40px;height:40px;margin:0;flex:0 0 auto}
+  [data-mode="mobile"] .tab .t{flex:1;font-size:18px}
+  [data-mode="mobile"] .tab .t small{margin-top:4px;display:block;letter-spacing:.1em;font-size:10px}
+  [data-mode="mobile"] .tab .corner{display:none}
+  [data-mode="mobile"] .tab .go{position:static;opacity:1;transform:none;margin-left:auto;font-size:11px;letter-spacing:.14em;white-space:nowrap}
+  [data-mode="mobile"] .tab.is-active .n{color:var(--act-sub)}
+  [data-mode="mobile"] .panel{display:none}
+  [data-mode="mobile"] .sect{margin-bottom:14px}
+  [data-mode="mobile"] .mx{flex:0 0 78%}
+
+  /* ================= FX · BOOT · REVEAL · CURSOR ================= */
+  #prog{position:fixed;top:0;left:0;height:3px;width:100%;z-index:80;background:var(--prog-bg);transform-origin:0 0;transform:scaleX(0);box-shadow:0 0 12px var(--accent-glow);pointer-events:none}
+  body.lock{overflow:hidden}
+
+  /* custom cyber cursor */
+  #cur{position:fixed;left:0;top:0;z-index:110;pointer-events:none;display:none}
+  body.has-cursor #cur{display:block}
+  body.has-cursor,body.has-cursor *{cursor:none}
+  #cur .dot{position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px var(--accent),0 0 16px var(--accent)}
+  #cur .ring{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid var(--accent);border-radius:50%;transition:width .18s,height .18s,margin .18s,border-color .18s;box-shadow:0 0 8px var(--accent-glow)}
+  #cur .cross{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;opacity:.55}
+  #cur .cross::before,#cur .cross::after{content:"";position:absolute;background:var(--accent)}
+  #cur .cross::before{left:7px;top:0;width:1px;height:16px}
+  #cur .cross::after{top:7px;left:0;height:1px;width:16px}
+  body.has-cursor #cur.hov .ring{width:52px;height:52px;margin:-26px 0 0 -26px;border-color:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
+  body.has-cursor #cur.hov .cross{opacity:.9}
+  body.has-cursor #cur.drag .ring{border-style:dashed}
+
+  .brand,.eyebrow,.tag,.brand-strip,.sect,.panel,footer,.matrix{will-change:opacity,transform}
+  .js .rv{opacity:0}
+  .js .rv.in{opacity:1;animation:rise .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0s)}
+  .js .tab.rv.in{animation-name:riseOp}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+  @keyframes riseOp{from{opacity:0}to{opacity:1}}
+
+  .skiplink{position:absolute;left:-9999px;top:0;z-index:200;background:var(--accent);color:var(--on-accent);padding:10px 16px;font-family:'Share Tech Mono';border-radius:0 0 6px 0}
+  .skiplink:focus{left:0}
+
+  /* ---- boot overlay (ULTRA: glitch tear + typewriter + stages) ---- */
+  .boot{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;
+    background:var(--strip);
+    transition:clip-path .7s cubic-bezier(.85,0,.15,1),opacity .55s ease;
+    clip-path:inset(0 0 0 0)}
+  .js .boot{display:flex}
+  .boot.done{clip-path:inset(0 0 100% 0);opacity:0;pointer-events:none}
+  .boot-grid{position:absolute;inset:0;background-image:linear-gradient(var(--boot-grid) 1px,transparent 1px),linear-gradient(90deg,var(--boot-grid) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 82%);-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000,transparent 82%)}
+  .boot-glow{position:absolute;width:420px;height:420px;border-radius:50%;background:var(--boot-glow);filter:blur(10px);animation:pulse 2.4s ease-in-out infinite}
+  .boot-inner{position:relative;text-align:center;width:min(480px,84vw)}
+  .boot-orb{width:clamp(70px,12vw,104px);height:clamp(70px,12vw,104px);margin:0 auto 18px;color:var(--accent);animation:orbspin 2.2s linear infinite}
+  @keyframes orbspin{to{transform:rotate(360deg)}}
+  .boot-brand{font-family:'Anton';text-transform:uppercase;font-size:clamp(44px,11vw,84px);line-height:1;color:var(--accent);letter-spacing:.04em;position:relative;animation:wordin .7s ease both}
+  .boot-brand::before,.boot-brand::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;overflow:hidden;pointer-events:none}
+  .boot-brand::before{color:var(--boot-tear1);z-index:-1;animation:tearA 1.2s steps(2) infinite}
+  .boot-brand::after{color:var(--boot-tear2);z-index:-2;animation:tearB 1.4s steps(2) infinite}
+  @keyframes tearA{0%,33%{clip-path:inset(0 0 90% 0);transform:translate(-3px,-1px)}34%,66%{clip-path:inset(70% 0 6% 0);transform:translate(3px,1px)}67%,100%{clip-path:inset(20% 0 40% 0);transform:translate(-2px,0)}}
+  @keyframes tearB{0%,40%{clip-path:inset(60% 0 30% 0);transform:translate(3px,1px)}41%,80%{clip-path:inset(10% 0 70% 0);transform:translate(-3px,0)}81%,100%{clip-path:inset(40% 0 20% 0);transform:translate(2px,-1px)}}
+  @keyframes wordin{from{opacity:0;letter-spacing:.4em;transform:translateY(18px)}to{opacity:1;letter-spacing:.04em;transform:none}}
+  .boot-line{min-height:22px;font-family:'Share Tech Mono';letter-spacing:.34em;font-size:13px;color:var(--accent-2);text-transform:uppercase;margin-top:10px}
+  .boot-line::after{content:"\25AE";color:var(--accent);animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .boot-bar{height:4px;border-radius:4px;overflow:hidden;background:var(--line-soft);margin:28px auto 16px;width:100%}
+  .boot-bar i{display:block;height:100%;width:0;background:var(--accent);box-shadow:0 0 16px var(--accent-glow)}
+  .boot-status{font-family:'Share Tech Mono';letter-spacing:.32em;font-size:12px;color:var(--accent-2);text-transform:uppercase;min-height:16px}
+  .boot-hint{margin-top:10px;font-family:'Share Tech Mono';letter-spacing:.2em;font-size:10px;color:var(--muted-2);opacity:.8}
+  .boot-skip{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--line);color:var(--accent-2);
+    font-family:'Share Tech Mono';font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:7px 12px;border-radius:4px;cursor:pointer;transition:.2s}
+  .boot-skip:hover{border-color:var(--accent);color:var(--accent)}
+  .boot-skip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  @media (prefers-reduced-motion: reduce){
+    .js .rv,.js .rv.in{opacity:1!important;animation:none!important;transform:none!important}
+    .boot{clip-path:none!important;opacity:0!important;pointer-events:none!important;display:none!important}
+    .noise{animation:none!important}
+    .ticker-track{animation:none!important}
+    #cur{display:none!important}
+    body.has-cursor *{cursor:auto!important}
+    .tab::after,.mx::after{display:none!important}
+    .boot-brand::before,.boot-brand::after{animation:none!important;display:none}
+  }
+</style>
+</head>
+
+<body>
+  <a class="skiplink" href="#tabs">Skip to gateway nodes</a>
+  <div id="prog" aria-hidden="true"></div>
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <div id="cur" aria-hidden="true">
+    <span class="cross"></span>
+    <span class="ring"></span>
+    <span class="dot"></span>
+  </div>
+
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot-grid"></div>
+    <div class="boot-glow"></div>
+    <div class="boot-inner">
+      <svg class="boot-orb" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="16"/><rect class="orb-cut" x="44" y="82" width="12" height="16"/></svg>
+      <div class="boot-brand" data-text="RKrint" id="bootBrand">RKrint</div>
+      <div class="boot-line" id="bootLine"></div>
+      <div class="boot-bar"><i id="bootBar"></i></div>
+      <div class="boot-status" id="bootStatus">BOOTING KERNEL</div>
+      <div class="boot-hint" id="bootHint">TAP ANYWHERE TO SKIP</div>
+    </div>
+    <button class="boot-skip" id="bootSkip" tabindex="0">SKIP &#9656;</button>
+  </div>
+
+  <div class="bg"></div>
+  <div class="grid"></div>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div class="vstrip"><span>rkrint</span></div>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickTrack"></div></div>
+
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="left">
+        <span class="pulse"></span>
+        <span>RKrint // SYSTEM GATEWAY</span>
+      </div>
+      <div class="right">
+        <div class="thm" role="group" aria-label="Colour mode">
+          <button type="button" class="thm-b" data-theme="ultra" aria-pressed="true">Ultra</button>
+          <button type="button" class="thm-b" data-theme="light" aria-pressed="false">White</button>
+          <button type="button" class="thm-b" data-theme="dark" aria-pressed="false">Black</button>
+        </div>
+        <button class="snd" id="snd" aria-pressed="false" title="Toggle sound">
+          <span id="sndTx">SND:OFF</span>
+        </button>
+        <span style="opacity:.4">|</span>
+        <span>CHANNEL</span><b>SECURE</b>
+        <span style="opacity:.4">|</span>
+        <span>Z-25</span>
+      </div>
+    </div>
+
+    <header class="hero">
+      <div class="eyebrow rv" style="--d:.04s">// CYBER SYSTEM &middot; TRANSPORT NODES //</div>
+      <h1 class="brand rv" style="--d:.10s">
+        <svg class="logo-orb" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="16"/>
+          <rect class="orb-cut" x="44" y="82" width="12" height="16"/>
+        </svg>
+        <span class="word">RK<em>rint</em></span>
+      </h1>
+      <div class="brand-strip rv" style="--d:.18s">
+        <span class="sub">Security &middot; IOT &middot; Cloud</span>
+        <span class="div"></span>
+        <span class="num">SYS/7-NODE</span>
+      </div>
+      <p class="tag rv" style="--d:.26s">Welcome to the RKrint transport hub. Select any node below to jump to the corresponding service — no login, no waiting, reach your destination in one click.</p>
+    </header>
+
+    <div class="sect rv" style="--d:.32s">
+      <span class="bar"></span>
+      <h2>GATEWAY NODES</h2>
+      <span class="idx">SELECT NODE &#9656; 01&mdash;07</span>
+    </div>
+
+    <nav class="tabnav" id="tabs" role="tablist" aria-label="Gateway nodes" aria-orientation="horizontal"></nav>
+
+    <section class="panel rv" style="--d:.40s" role="tabpanel" id="panel" aria-live="polite">
+      <div class="inner">
+        <div class="info">
+          <div class="kick" id="pKick">NODE 01</div>
+          <h3 id="pTitle" tabindex="-1">NEXUS</h3>
+          <p class="desc" id="pDesc"></p>
+          <div class="meta" id="pMeta"></div>
+          <a class="enter" id="pGo" href="#" target="_blank" rel="noopener">
+            <span id="pGoLabel">Enter NEXUS</span>
+            <span class="arr">&#10230;</span>
+          </a>
+          <div class="url" id="pUrl"></div>
+        </div>
+        <div class="visual">
+          <div class="scan"></div>
+          <svg class="orb" id="pOrb" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="16"/>
+            <rect class="orb-cut" x="44" y="82" width="12" height="16"/>
+          </svg>
+          <div class="code">// RKrint &middot; uplink.to node</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sect rv" style="--d:.30s">
+      <span class="bar"></span>
+      <h2>PRODUCT LINE</h2>
+      <span class="idx">COMPARE &#9656; 07 NODES</span>
+    </div>
+    <div class="matrix-wrap rv" style="--d:.38s">
+      <div class="matrix-nav">
+        <button type="button" id="mxPrev" aria-label="Scroll left">&#8249;</button>
+        <button type="button" id="mxNext" aria-label="Scroll right">&#8250;</button>
+      </div>
+      <div class="matrix" id="matrix" tabindex="0" aria-label="Product line node comparison"></div>
+    </div>
+
+    <footer class="rv" style="--d:.1s">
+      <div><span class="z">RKrint</span> &copy; <span id="yy">2026</span> &middot; C Entrance</div>
+      <div class="links">
+        <a href="https://linktr.ee/RKrint" target="_blank" rel="noopener">linktr</a>
+        <a href="https://iot.rkrint.com/" target="_blank" rel="noopener">iot</a>
+        <a href="https://zero.rkrint.com/" target="_blank" rel="noopener">zero</a>
+        <a href="https://t.me/rkrint" target="_blank" rel="noopener">telegram</a>
+        <span class="hint">[T] CYCLE THEME</span>
+      </div>
+    </footer>
+
+  </div>
+
+
+<script>
+/* ============================================================
+   THREE COLOUR MODES — single source of truth
+   ------------------------------------------------------------
+   ultra : original purple + lime on deep ink   (light:0, additive)
+   light : pure #000/#fff/#f00 · WHITE bg       (light:1, alpha blend)
+   dark  : pure #000/#fff/#f00 · BLACK bg       (light:0, additive)
+   The `sp` block feeds the WebGL shader uniforms, `pc` feeds the
+   GPU particle colours, the CSS half lives in the [data-theme] blocks.
+   ============================================================ */
+const THEME_ORDER = ['ultra','light','dark'];
+const THEMES = {
+  ultra: {
+    meta:'#0b0016',
+    favBg:'%230b0016', favRing:'%23D6FF00',
+    sp:{
+      light:0, amt:0.8, add:1, blend:'add',
+      skyA:[0.06,0.015,0.14], skyB:[0.03,0.0,0.07],
+      aur1:[0.36,0.14,0.85], aur2:[0.84,1.0,0.05],
+      haze1:[0.5,0.3,1.0],   haze2:[0.4,0.25,0.95],
+      floor:[0.03,0.0,0.07], grid:[0.84,1.0,0.0], hor:[0.35,0.0,0.9],
+      vig:[0,0,0]
+    },
+    pc:{ a:[0.0,0.9,0.3], b:[0.4,0.2,1.0], w:0.5 },
+    dust:[0.35,0.80], spark:[0.6,1.0]
+  },
+  light: {
+    meta:'#ffffff',
+    favBg:'%23ffffff', favRing:'%23ff0000',
+    sp:{
+      light:1, amt:1.0, add:0, blend:'alpha',
+      skyA:[1,1,1], skyB:[1,1,1],
+      aur1:[1,0,0], aur2:[1,0,0],
+      haze1:[1,0,0], haze2:[1,0,0],
+      floor:[1,1,1], grid:[1,0,0], hor:[1,0,0],
+      vig:[1,1,1]
+    },
+    pc:{ a:[1,0,0], b:[1,0,0], w:1 },
+    dust:[0.16,0.42], spark:[0.5,0.95]
+  },
+  dark: {
+    meta:'#000000',
+    favBg:'%23000000', favRing:'%23ff0000',
+    sp:{
+      light:0, amt:1.0, add:1, blend:'add',
+      skyA:[0,0,0], skyB:[0,0,0],
+      aur1:[1,0,0], aur2:[1,0,0],
+      haze1:[1,0,0], haze2:[1,0,0],
+      floor:[0,0,0], grid:[1,0,0], hor:[1,0,0],
+      vig:[0,0,0]
+    },
+    pc:{ a:[1,0,0], b:[1,1,1], w:0.7 },
+    dust:[0.35,0.80], spark:[0.6,1.0]
+  }
+};
+
+/* ============================================================
+   NODE DATA — 7 transport nodes (product-line names, fixed)
+   ============================================================ */
+const LINKS = [
+  { n:"01", t:"NEXUS", key:"HUB", desc:"The single gateway to every RKrint service. All links in one place — bookmark once, reach anywhere, no friction.",
+    url:"https://linktr.ee/RKrint", go:"Enter NEXUS", domain:"linktr.ee/RKrint", status:"ALL·CHANNELS", mode:"PUBLIC",
+    matrix:{ access:90, speed:70, cloud:60 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="18" r="2.4"/><circle cx="12" cy="12" r="2.4"/><path d="M7.6 7.6l3 3M16.4 7.6l-3 3M7.6 16.4l3-3M16.4 16.4l-3-3"/></svg>' },
+  { n:"02", t:"RELAY", key:"SEND", desc:"Send without an account, sign-in or identity. A frictionless channel that gets your data to the right place instantly.",
+    url:"https://forms.gle/ga2FBp1EtwMPJ4oL9", go:"Open RELAY", domain:"forms.gle/ga2FBp1EtwMPJ4oL9", status:"FORM·NOAUTH", mode:"NO-LOGIN",
+    matrix:{ access:95, speed:80, cloud:55 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 13h8M8 17h5"/></svg>' },
+  { n:"03", t:"FOUNDRY", key:"IOT·LAB", desc:"The step-by-step IOT experimental SOP. Follow the procedure and execute every stage of the build, one step at a time.",
+    url:"https://iot.rkrint.com/", go:"Open FOUNDRY", domain:"iot.rkrint.com/", status:"IOT·SOP", mode:"PROCEDURE",
+    matrix:{ access:70, speed:55, cloud:85 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/></svg>' },
+  { n:"04", t:"ZERO", key:"CORE", desc:"The maker behind this world. Meet the identity that built the RKrint system, and the story that powers it.",
+    url:"https://zero.rkrint.com/", go:"Meet ZERO", domain:"zero.rkrint.com/", status:"ZERO·CENTRAL", mode:"IDENTITY",
+    matrix:{ access:80, speed:60, cloud:50 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>' },
+  { n:"05", t:"PULSE", key:"COMMS", desc:"The public RKrint channel. Open comms — get updates in real time and talk directly with the community.",
+    url:"https://t.me/rkrint", go:"Join PULSE", domain:"t.me/rkrint", status:"TG·OPEN", mode:"COMMUNITY",
+    matrix:{ access:90, speed:75, cloud:65 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 4L3 12l5 2 2 6 3-4 5 3z"/><path d="M8 14l9-7"/></svg>' },
+  { n:"06", t:"VAULT", key:"UPLOAD", desc:"The dedicated upload node. Push large files through gofile and get a shareable link in seconds.",
+    url:"http://gofile.io/", go:"Open VAULT", domain:"gofile.io/", status:"GOFILE·UP", mode:"UPLINK",
+    matrix:{ access:60, speed:90, cloud:75 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>' },
+  { n:"07", t:"NIMBUS", key:"CLOUD·MAC", desc:"A macOS desktop in the cloud. Boot a virtual Apple system in your browser and work from anywhere.",
+    url:"https://macos.rkrint.com/", go:"Launch NIMBUS", domain:"macos.rkrint.com/", status:"MAC·CLOUD", mode:"DESKTOP",
+    matrix:{ access:55, speed:65, cloud:95 },
+    icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M10 8l-2 3h3l-2 3M14 8h2M14 8v5"/></svg>' }
+];
+
+/* ============================================================
+   ENV / REDUCED MOTION
+   ============================================================ */
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+const $ = id => document.getElementById(id);
+// shared rAF handles for the WebGL loop and visibility pause
+let rafId = false, paused = false;
+
+/* ============================================================
+   THEME ENGINE — swaps CSS tokens, meta, favicon and WebGL uniforms
+   ============================================================ */
+let switchT = null;
+function favHref(t){
+  return "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E"
+    + "%3Crect width='100' height='100' rx='18' fill='" + t.favBg + "'/%3E"
+    + "%3Ccircle cx='50' cy='50' r='39' fill='none' stroke='" + t.favRing + "' stroke-width='14'/%3E"
+    + "%3Crect x='44' y='80' width='12' height='14' fill='" + t.favBg + "'/%3E%3C/svg%3E";
+}
+function currentTheme(){
+  const v = document.documentElement.getAttribute('data-theme');
+  return THEMES[v] ? v : 'ultra';
+}
+function setTheme(name, silent){
+  if(!THEMES[name]) name = 'ultra';
+  const root = document.documentElement;
+
+  root.classList.add('switching');
+  clearTimeout(switchT);
+  switchT = setTimeout(function(){ root.classList.remove('switching'); }, 440);
+
+  root.setAttribute('data-theme', name);
+  try{ localStorage.setItem('rk-theme', name); }catch(e){}
+
+  const mt = document.getElementById('metaTheme');
+  if(mt) mt.setAttribute('content', THEMES[name].meta);
+  const fav = document.getElementById('fav');
+  if(fav) fav.setAttribute('href', favHref(THEMES[name]));
+
+  document.querySelectorAll('.thm-b').forEach(function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.theme === name));
+  });
+
+  // push the new palette into the running WebGL scene (if it initialised)
+  if(window.__RK_THEME__) window.__RK_THEME__.apply(name);
+  if(!silent) AudioFX.blip();
+}
+function cycleTheme(){
+  const i = THEME_ORDER.indexOf(currentTheme());
+  setTheme(THEME_ORDER[(i + 1) % THEME_ORDER.length]);
+}
+(function initThemeUI(){
+  const start = currentTheme();
+  document.querySelectorAll('.thm-b').forEach(function(b){
+    b.addEventListener('click', function(){ setTheme(b.dataset.theme); });
+  });
+  // sync meta/favicon/pressed state for the theme resolved before paint
+  const mt = document.getElementById('metaTheme');
+  if(mt) mt.setAttribute('content', THEMES[start].meta);
+  const fav = document.getElementById('fav');
+  if(fav) fav.setAttribute('href', favHref(THEMES[start]));
+  document.querySelectorAll('.thm-b').forEach(function(b){
+    b.setAttribute('aria-pressed', String(b.dataset.theme === start));
+  });
+  // [T] cycles the three modes
+  window.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    if(e.key === 't' || e.key === 'T'){ cycleTheme(); }
+  });
+})();
+
+/* ============================================================
+   AUDIO — low-key WebAudio beeps (off by default, tiny toggle)
+   ============================================================ */
+const AudioFX = (function(){
+  let AC = null, muted = true;
+  function ensure(){
+    if(muted) return null;
+    if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ AC=null; } }
+    if(AC && AC.state==='suspended') AC.resume();
+    return AC;
+  }
+  function tone(freq, dur, type, vol){
+    const ctx = ensure(); if(!ctx) return;
+    try{
+      const o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime;
+      o.type = type||'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol||0.05, t0+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0); o.stop(t0+dur+0.02);
+    }catch(e){}
+  }
+  return {
+    setMuted(m){ muted = m; if(!m) ensure(); },
+    isMuted(){ return muted; },
+    stage(){ tone(220, 0.09, 'square', 0.05); },
+    tick(){ tone(880, 0.04, 'sine', 0.04); },
+    blip(){ tone(660, 0.05, 'triangle', 0.05); },
+    ready(){ tone(440, 0.16, 'sine', 0.06); tone(880, 0.22, 'sine', 0.05); }
+  };
+})();
+function initSndBtn(){
+  const b = $('snd'); if(!b) return;
+  function upd(){ $('sndTx').textContent = (AudioFX.isMuted()?'SND:OFF':'SND:ON'); b.setAttribute('aria-pressed', String(AudioFX.isMuted())); }
+  b.addEventListener('click', function(ev){ ev.stopPropagation(); AudioFX.setMuted(!AudioFX.isMuted()); upd(); AudioFX.blip(); });
+  upd();
+}
+
+/* ============================================================
+   AUTO DEVICE DETECTION (browser ratio)
+   ============================================================ */
+let lastMode = null;
+function detectMode(){
+  const w = window.innerWidth, h = window.innerHeight || 1, ratio = w/h;
+  return ((w <= 820) || (ratio < 0.8)) ? 'mobile' : 'desktop';
+}
+function applyMode(){
+  const mode = detectMode();
+  document.documentElement.setAttribute('data-mode', mode);
+  if(mode !== lastMode){
+    if(mode === 'desktop'){
+      let idx = 0;
+      const act = document.querySelector('.tab.is-active');
+      if(act) idx = +act.dataset.i || 0;
+      activate(idx);
+    }
+    lastMode = mode;
+  }
+}
+['resize','orientationchange'].forEach(ev => window.addEventListener(ev, applyMode));
+
+/* ============================================================
+   RENDER TABS
+   ============================================================ */
+const tabsEl = $('tabs');
+const tabButtons = [];
+LINKS.forEach((l,i)=>{
+  const b = document.createElement('button');
+  b.className = 'tab rv';
+  b.style.setProperty('--d', (0.05 + i*0.05) + 's');
+  b.dataset.i = i;
+  b.setAttribute('role','tab');
+  b.setAttribute('id','tab-'+i);
+  b.setAttribute('aria-controls','panel');
+  b.setAttribute('aria-selected', i===0?'true':'false');
+  b.setAttribute('tabindex', i===0?'0':'-1');
+  b.innerHTML = '<span class="n">NODE '+l.n+'</span>'
+    + '<span class="ic">'+l.icon+'</span>'
+    + '<span class="t">'+l.t+'<small>'+l.key+'</small></span>'
+    + '<span class="corner"></span>'
+    + '<span class="go">ACCESS &#9656; '+l.mode+'</span>';
+  b.addEventListener('click', function(){
+    if(document.documentElement.getAttribute('data-mode')==='mobile') window.open(LINKS[i].url, '_blank', 'noopener');
+    else activate(i);
+  });
+  b.addEventListener('pointerdown', function(){
+    if(document.documentElement.getAttribute('data-mode')!=='mobile') return;
+    b.style.transform = 'scale(.985)';
+  });
+  b.addEventListener('pointerup', ()=> b.style.transform='');
+  tabButtons.push(b);
+  tabsEl.appendChild(b);
+});
+
+/* keyboard navigation for tablist */
+tabsEl.addEventListener('keydown', function(ev){
+  const cur = tabButtons.findIndex(t => t === document.activeElement);
+  if(cur < 0) return;
+  let next = null;
+  if(ev.key === 'ArrowRight') next = (cur+1)%tabButtons.length;
+  else if(ev.key === 'ArrowLeft') next = (cur-1+tabButtons.length)%tabButtons.length;
+  else if(ev.key === 'Home') next = 0;
+  else if(ev.key === 'End') next = tabButtons.length-1;
+  if(next !== null){
+    ev.preventDefault();
+    tabButtons[next].focus();
+    if(document.documentElement.getAttribute('data-mode')!=='mobile') activate(next);
+  }
+});
+
+/* ============================================================
+   ACTIVATE (fills detail panel, updates aria)
+   ============================================================ */
+function activate(i){
+  const l = LINKS[i];
+  tabButtons.forEach(function(t,k){ t.classList.toggle('is-active',k===i); t.setAttribute('aria-selected',k===i?'true':'false'); t.setAttribute('tabindex',k===i?'0':'-1'); });
+  $('pKick').textContent = 'NODE '+l.n+' // '+l.key;
+  $('pTitle').textContent = l.t.toUpperCase();
+  $('pDesc').textContent = l.desc;
+  $('pMeta').innerHTML = '<span>STATE &#9656; <b>'+l.status+'</b></span><span>MODE &#9656; <b>'+l.mode+'</b></span><span>ID &#9656; <b>RK-'+l.n+'</b></span>';
+  $('pGo').href = l.url;
+  $('pGoLabel').textContent = l.go;
+  $('pUrl').textContent = l.url.replace(/^https?:\/\//,'');
+  const orb = $('pOrb');
+  orb.style.animation = 'none'; void orb.offsetWidth; orb.style.animation = '';
+}
+
+/* ============================================================
+   PRODUCT MATRIX (dashboard comparison)
+   ============================================================ */
+(function buildMatrix(){
+  const mx = $('matrix');
+  LINKS.forEach(function(l,i){
+    const m = l.matrix;
+    const bars = [['ACCESS',m.access],['SPEED',m.speed],['CLOUD',m.cloud]];
+    const el = document.createElement('div');
+    el.className = 'mx';
+    el.setAttribute('tabindex','0');
+    el.setAttribute('role','listitem');
+    el.innerHTML = '<div class="mh"><span class="mnum">NODE '+l.n+'</span><span class="mkey">'+l.key+'</span></div>'
+      + '<div class="mname">'+l.t+'</div>'
+      + '<div class="mkey">mode <b>'+l.mode+'</b></div>'
+      + bars.map(function(b){ return '<div class="mbar"><div class="lbl"><span>'+b[0]+'</span><em>'+b[1]+'</em></div><div class="trk"><div class="fill" data-w="'+b[1]+'"></div></div></div>'; }).join('')
+      + '<a class="mxgo" href="'+l.url+'" target="_blank" rel="noopener">GO &#9656; '+l.key+'</a>';
+    mx.appendChild(el);
+  });
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.querySelectorAll('.fill').forEach(function(f){ f.style.width = f.dataset.w+'%'; }); io.unobserve(e.target); } });
+    }, {threshold:.25});
+    mx.querySelectorAll('.mx').forEach(c=>io.observe(c));
+  } else {
+    mx.querySelectorAll('.fill').forEach(function(f){ f.style.width = f.dataset.w+'%'; });
+  }
+})();
+(function matrixNav(){
+  const mx = $('matrix');
+  $('mxPrev').addEventListener('click', ()=> mx.scrollBy({left:-mx.clientWidth*0.6, behavior:'smooth'}));
+  $('mxNext').addEventListener('click', ()=> mx.scrollBy({left: mx.clientWidth*0.6, behavior:'smooth'}));
+})();
+
+/* ============================================================
+   MARQUEE TICKER (brand + node names, seamless loop)
+   ============================================================ */
+(function buildTicker(){
+  const track = $('tickTrack');
+  const brand = ['RKRINT','C ENTRANCE','SYSTEM GATEWAY','SECURE CHANNEL'];
+  const items = [ ...brand, ...LINKS.map(l=>l.t+' // '+l.key), ...brand, ...LINKS.map(l=>l.n+' · '+l.key) ];
+  const seg = items.map(function(t){ return '<span>'+ (brand.indexOf(t)>=0 ? '<b>'+t+'</b>' : t) +'</span>'; }).join('');
+  track.innerHTML = seg + seg;   // two identical halves → translateX(-50%) loops seamlessly
+})();
+
+/* ============================================================
+   SMOOTH SCROLL — Lenis-equivalent lerp (fine pointer only)
+   ============================================================ */
+(function SmoothScroll(){
+  if(REDUCED || !FINE) return;
+  let target = window.scrollY||0, cur = target, raf = null, anim = false;
+  function maxScroll(){ return Math.max(0, document.documentElement.scrollHeight - window.innerHeight); }
+  function loop(){
+    cur += (target - cur) * 0.12;
+    if(Math.abs(target-cur) < 0.6) cur = target;
+    window.scrollTo(0, cur);
+    if(cur !== target) raf = requestAnimationFrame(loop);
+    else { anim = false; raf = null; }
+  }
+  function start(){ if(!anim){ anim = true; raf = requestAnimationFrame(loop); } }
+  function onWheel(e){
+    if(e.ctrlKey) return;
+    if(e.target && e.target.closest && e.target.closest('#matrix')) return;
+    e.preventDefault();
+    target = Math.max(0, Math.min(maxScroll(), target + e.deltaY));
+    start();
+  }
+  function onScroll(){
+    const top = window.scrollY || document.documentElement.scrollTop || 0;
+    if(top !== cur){ target = top; cur = top; }
+  }
+  window.addEventListener('wheel', onWheel, {passive:false});
+  window.addEventListener('scroll', onScroll, {passive:true});
+})();
+
+
+/* ============================================================
+   WEBGL BACKGROUND + GPU PARTICLES (raw shaders, self-contained)
+   Every colour arrives as a uniform so the theme engine can
+   re-palette the scene without rebuilding a single shader.
+   ============================================================ */
+(function BG(){
+  const cv = $('gl');
+  if(!cv || REDUCED) return;
+  let gl, program, quad, bgLoc, posLoc, aspect = 1;
+  let curTheme = currentTheme();
+  let curBlend = THEMES[curTheme].sp.blend;
+  const DPR = Math.min(window.devicePixelRatio||1, FINE ? 2 : 1.5);
+
+  function catchGL(e){ document.body.classList.remove('webgl'); if(e) console.warn('WebGL disabled:', e && (e.message||e)); }
+
+  function compile(type, src){
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)||'shader-compile');
+    return s;
+  }
+  function link(vs,fs){
+    const p = gl.createProgram();
+    gl.attachShader(p, compile(gl.VERTEX_SHADER,vs));
+    gl.attachShader(p, compile(gl.FRAGMENT_SHADER,fs));
+    gl.linkProgram(p);
+    if(!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)||'program-link');
+    return p;
+  }
+  const uLoc = (p,n)=>gl.getUniformLocation(p,n);
+
+  try{
+    const attr = { alpha:true, antialias:true, depth:false, stencil:false, powerPreference:'high-performance', preserveDrawingBuffer:false };
+    gl = cv.getContext('webgl', attr) || cv.getContext('experimental-webgl', attr);
+    if(!gl) throw new Error('no-webgl');
+    if(!gl.getExtension('OES_standard_derivatives')) throw new Error('no-derivative-ext');  // needed for crisp grid lines
+
+    /* ---------- BACKGROUND (grid floor + aurora sky) ---------- */
+    const HEAD = '#extension GL_OES_standard_derivatives : enable\n';
+    const bgVS = 'attribute vec2 a;varying vec2 vUv;void main(){vUv=a*0.5+0.5;gl_Position=vec4(a,0.0,1.0);}';
+    /* NOTE: dark modes composite additively (col += ...), the white mode must
+       mix instead — adding red onto white just clamps back to white.          */
+    const bgFS = HEAD +
+      'precision highp float;varying vec2 vUv;\n' +
+      'uniform float uTime,uAsp,uLight,uAmt;uniform vec2 uPar;\n' +
+      'uniform vec3 uSkyA,uSkyB,uAur1,uAur2,uHaze1,uHaze2,uFloor,uGrid,uHor,uVig;\n' +
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}\n' +
+      'void main(){\n' +
+      '  vec2 uv = vUv + (uPar*2.0-1.0)*0.018; float t = uTime;\n' +
+      '  float horizon = 0.52 + sin(t*0.15)*0.02 + (uPar.y-0.5)*0.05;\n' +
+      '  float isLight = step(0.5, uLight);\n' +
+      '  vec3 col = vec3(0.0);\n' +
+      '  if(uv.y > horizon){\n' +
+      '    float hn = uv.y - horizon; vec2 p = vec2(uv.x*uAsp, hn);\n' +
+      '    float a = smoothstep(0.0, 0.5, hn);\n' +
+      '    float gy = smoothstep(horizon, 1.0, uv.y);\n' +
+      '    vec3 base = mix(uSkyA, uSkyB, gy);\n' +
+      '    vec3 aCol = mix(uAur1, uAur2, a);\n' +
+      '    float rib = sin(p.x*2.2 + t*0.5 + sin(p.x*4.0 - t*0.35)*0.5)*0.5+0.5;\n' +
+      '    float aur = pow(rib, 3.0) * smoothstep(0.0,0.28,hn) * smoothstep(0.75,0.10,hn);\n' +
+      '    float aur2 = pow(max(0.0,sin(p.x*4.5 - t*0.8 + p.y*3.0)),2.0);\n' +
+      '    float n = hash(p*30.0 + t*0.3)*0.5+0.5;\n' +
+      '    float sh = smoothstep(0.0,0.22,hn);\n' +
+      '    float hb = smoothstep(0.0,0.14,hn);\n' +
+      '    float ribAmt = (0.35 + n*0.2) * uAmt;\n' +
+      '    vec3 addC = aCol*aur*ribAmt + uHaze1*aur2*0.10*sh + uHaze2*hb*0.28;\n' +
+      '    vec3 mixC = mix(mix(mix(base, aCol, clamp(aur*ribAmt*0.6,0.0,1.0)), uHaze1, clamp(aur2*0.05*sh,0.0,1.0)), uHaze2, hb*0.10);\n' +
+      '    col = mix(base + addC, mixC, isLight);\n' +
+      '  } else {\n' +
+      '    float dist = horizon - uv.y;\n' +
+      '    float depth = 1.0 / max(dist, 1e-4);\n' +
+      '    float z = depth*6.0 + t*1.7;\n' +
+      '    vec2 g = vec2(uv.x*uAsp*11.0, z);\n' +
+      '    vec2 gg = abs(fract(g)-0.5)/fwidth(g);\n' +
+      '    float line = min(gg.x, gg.y);\n' +
+      '    float gline = 1.0 - min(line, 1.0);\n' +
+      '    float fade = smoothstep(horizon, horizon-0.16, uv.y);\n' +
+      '    float v = gline * fade;\n' +
+      '    float hg = smoothstep(0.07, 0.0, dist);\n' +
+      '    vec3 addC2 = uGrid*v*0.28 + uHor*hg*0.45;\n' +
+      '    vec3 mixC2 = mix(mix(uFloor, uGrid, clamp(v*0.75,0.0,1.0)), uHor, hg*0.55);\n' +
+      '    col = mix(uFloor + addC2, mixC2, isLight);\n' +
+      '  }\n' +
+      '  vec2 vc = uv*2.0-1.0; vc.x *= uAsp;\n' +
+      '  float vg = pow(length(vc)*0.5, 2.4);\n' +
+      '  col = mix(col*(1.0-0.5*vg), mix(col, uVig, vg*0.55), isLight);\n' +
+      '  gl_FragColor = vec4(col, 1.0);\n' +
+      '}';
+
+    /* ---------- PARTICLES (GPU point sprites) ---------- */
+    const pVS = 'attribute vec2 aP;attribute vec3 aC;attribute float aS;attribute float aA;uniform vec2 uPl;varying vec3 vC;varying float vA;\n' +
+      'void main(){vec2 p = aP + uPl*0.02; vC=aC; vA=aA; gl_Position=vec4(p,0.0,1.0); gl_PointSize=aS;}';
+    const pFS = 'precision mediump float;varying vec3 vC;varying float vA;uniform float uAdd;\n' +
+      'void main(){vec2 d=gl_PointCoord-0.5; float r=length(d); float g=pow(smoothstep(0.5,0.0,r),1.6); if(vA<=0.002) discard;\n' +
+      '  gl_FragColor = mix(vec4(vC, g*vA), vec4(vC*g*vA, g*vA), uAdd);}';
+
+    program = link(bgVS, bgFS);
+    bgLoc = {
+      uTime:uLoc(program,'uTime'), uPar:uLoc(program,'uPar'), uAsp:uLoc(program,'uAsp'),
+      uLight:uLoc(program,'uLight'), uAmt:uLoc(program,'uAmt'),
+      uSkyA:uLoc(program,'uSkyA'), uSkyB:uLoc(program,'uSkyB'),
+      uAur1:uLoc(program,'uAur1'), uAur2:uLoc(program,'uAur2'),
+      uHaze1:uLoc(program,'uHaze1'), uHaze2:uLoc(program,'uHaze2'),
+      uFloor:uLoc(program,'uFloor'), uGrid:uLoc(program,'uGrid'),
+      uHor:uLoc(program,'uHor'), uVig:uLoc(program,'uVig')
+    };
+
+    quad = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+    posLoc = gl.getAttribLocation(program, 'a');
+
+    const pProg = link(pVS, pFS);
+    const pPosLoc = gl.getAttribLocation(pProg,'aP');
+    const cLoc = gl.getAttribLocation(pProg,'aC');
+    const sLoc = gl.getAttribLocation(pProg,'aS');
+    const aLoc = gl.getAttribLocation(pProg,'aA');
+    const uPl = uLoc(pProg,'uPl');
+    const uAdd = uLoc(pProg,'uAdd');
+
+    const mobile = (detectMode()==='mobile') || !FINE;
+    const CAP = mobile ? 560 : 1250;
+    const DUST = mobile ? 70 : 150;
+    const kx=new Float32Array(CAP),ky=new Float32Array(CAP),kvx=new Float32Array(CAP),kvy=new Float32Array(CAP),
+          kl=new Float32Array(CAP),kd=new Float32Array(CAP),kz=new Float32Array(CAP),kmx=new Float32Array(CAP),
+          kr=new Float32Array(CAP),kg=new Float32Array(CAP),kb=new Float32Array(CAP);
+    const kind = new Uint8Array(CAP);
+    const posA = new Float32Array(CAP*2), alA = new Float32Array(CAP);
+    const colA = new Float32Array(CAP*3);
+    let next = DUST;
+    const rand = (a,b)=>a+Math.random()*(b-a);
+    const grav = 0.0009;
+
+    function pickColor(i){
+      const p = THEMES[curTheme].pc;
+      const c = Math.random() < p.w ? p.a : p.b;
+      kr[i]=c[0]; kg[i]=c[1]; kb[i]=c[2];
+    }
+    function uploadColors(){
+      for(let i=0;i<CAP;i++){ colA[i*3]=kr[i]; colA[i*3+1]=kg[i]; colA[i*3+2]=kb[i]; }
+      gl.bindBuffer(gl.ARRAY_BUFFER, colBuf); gl.bufferSubData(gl.ARRAY_BUFFER, 0, colA);
+    }
+
+    for(let i=0;i<DUST;i++){
+      kx[i]=rand(-1.25,1.25); ky[i]=rand(-1.25,1.25);
+      kvx[i]=rand(-0.00045,0.00045); kvy[i]=rand(-0.0004,0.0004);
+      kl[i]=1; kd[i]=0; kind[i]=0; kz[i]=rand(0.6,1.6);
+    }
+    for(let i=DUST;i<CAP;i++){ kl[i]=0; kind[i]=1; }
+
+    function spawn(x,y,vx,vy,size,life,decay,dim){
+      let s=-1;
+      for(let n=0;n<CAP;n++){ const j=(next+n)%CAP; if(kind[j]===1 && kl[j]<=0){ s=j; next=(j+1)%CAP; break; } }
+      if(s<0){ s=next; next=(next+1)%CAP; }
+      kx[s]=x; ky[s]=y; kvx[s]=vx; kvy[s]=vy; kl[s]=life; kd[s]=decay; kind[s]=1; kz[s]=size; kmx[s]=dim;
+      pickColor(s);
+    }
+    function toNdc(cx,cy){ return { x:(cx/window.innerWidth)*2-1, y:-((cy/window.innerHeight)*2-1) }; }
+
+    function mkBuf(size){ const b=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,b); gl.bufferData(gl.ARRAY_BUFFER, size*4, gl.DYNAMIC_DRAW); return b; }
+    const posBuf=mkBuf(CAP*2), colBuf=mkBuf(CAP*3), sizeBuf=mkBuf(CAP), alphaBuf=mkBuf(CAP);
+    (function uploadStatic(){
+      const sizes = new Float32Array(CAP);
+      for(let i=0;i<CAP;i++) sizes[i] = kz[i]*DPR;
+      gl.bindBuffer(gl.ARRAY_BUFFER,sizeBuf); gl.bufferSubData(gl.ARRAY_BUFFER,0,sizes);
+    })();
+
+    /* ---- live theme swap: uniforms + particle colours + blend mode ---- */
+    function applyShaderTheme(name){
+      if(!THEMES[name]) name = 'ultra';
+      curTheme = name;
+      const T = THEMES[name], p = T.sp;
+      curBlend = p.blend;
+
+      gl.useProgram(program);
+      gl.uniform1f(bgLoc.uLight, p.light);
+      gl.uniform1f(bgLoc.uAmt,   p.amt);
+      gl.uniform3fv(bgLoc.uSkyA, p.skyA);  gl.uniform3fv(bgLoc.uSkyB, p.skyB);
+      gl.uniform3fv(bgLoc.uAur1, p.aur1);  gl.uniform3fv(bgLoc.uAur2, p.aur2);
+      gl.uniform3fv(bgLoc.uHaze1,p.haze1); gl.uniform3fv(bgLoc.uHaze2,p.haze2);
+      gl.uniform3fv(bgLoc.uFloor,p.floor); gl.uniform3fv(bgLoc.uGrid, p.grid);
+      gl.uniform3fv(bgLoc.uHor,  p.hor);   gl.uniform3fv(bgLoc.uVig,  p.vig);
+      gl.useProgram(pProg);
+      gl.uniform1f(uAdd, p.add);
+
+      for(let i=0;i<DUST;i++) kmx[i] = rand(T.dust[0], T.dust[1]);
+      for(let i=0;i<CAP;i++) pickColor(i);
+      uploadColors();
+    }
+    window.__RK_THEME__ = { apply: applyShaderTheme };
+    applyShaderTheme(curTheme);
+
+    let pointer01={x:0.5,y:0.5}, pointerNdc={x:0,y:0}, lx=-1, ly=-1, lastMove=0, last = performance.now();
+
+    function frame(){
+      if(paused){ rafId = requestAnimationFrame(frame); return; }
+      const now = last = performance.now();
+      for(let i=0;i<CAP;i++){
+        if(kind[i]===0){
+          kx[i]+=kvx[i]; ky[i]+=kvy[i];
+          if(kx[i]<-1.3)kx[i]+=2.6; else if(kx[i]>1.3)kx[i]-=2.6;
+          if(ky[i]<-1.3)ky[i]+=2.6; else if(ky[i]>1.3)ky[i]-=2.6;
+          posA[i*2]=kx[i]; posA[i*2+1]=ky[i]; alA[i]=kmx[i];
+        } else {
+          if(kl[i]>0){
+            kx[i]+=kvx[i]; ky[i]+=kvy[i]; kvy[i]+=grav; kl[i]-=kd[i];
+            if(kl[i]<0) kl[i]=0;
+          }
+          posA[i*2]=kl[i]<=0 ? 99 : kx[i]; posA[i*2+1]=kl[i]<=0 ? 99 : ky[i]; alA[i]=kl[i]*kmx[i];
+        }
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER,posBuf); gl.bufferSubData(gl.ARRAY_BUFFER,0,posA);
+      gl.bindBuffer(gl.ARRAY_BUFFER,alphaBuf); gl.bufferSubData(gl.ARRAY_BUFFER,0,alA);
+
+      gl.disable(gl.BLEND);
+      gl.useProgram(program);
+      gl.uniform1f(bgLoc.uTime, now*0.001);
+      gl.uniform2f(bgLoc.uPar, pointer01.x, pointer01.y);
+      gl.uniform1f(bgLoc.uAsp, aspect);
+      gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+      gl.enableVertexAttribArray(posLoc); gl.vertexAttribPointer(posLoc,2,gl.FLOAT,false,0,0);
+      gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+
+      gl.enable(gl.BLEND);
+      if(curBlend === 'alpha') gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      else gl.blendFunc(gl.ONE, gl.ONE);
+      gl.useProgram(pProg);
+      gl.uniform2f(uPl, pointerNdc.x, pointerNdc.y);
+      gl.bindBuffer(gl.ARRAY_BUFFER,posBuf); gl.enableVertexAttribArray(pPosLoc); gl.vertexAttribPointer(pPosLoc,2,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER,colBuf); gl.enableVertexAttribArray(cLoc); gl.vertexAttribPointer(cLoc,3,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER,sizeBuf); gl.enableVertexAttribArray(sLoc); gl.vertexAttribPointer(sLoc,1,gl.FLOAT,false,0,0);
+      gl.bindBuffer(gl.ARRAY_BUFFER,alphaBuf); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc,1,gl.FLOAT,false,0,0);
+      gl.drawArrays(gl.POINTS,0,CAP);
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function onPointerMove(e){
+      pointer01.x = e.clientX/window.innerWidth; pointer01.y = e.clientY/window.innerHeight;
+      pointerNdc.x = pointer01.x*2-1; pointerNdc.y = -(pointer01.y*2-1);
+      if(!FINE) return;
+      const now = performance.now();
+      if(now-lastMove > 26){
+        lastMove = now;
+        if(lx>=0){
+          const dx=e.clientX-lx, dy=e.clientY-ly, d=Math.hypot(dx,dy);
+          if(d>1.2){
+            const n = Math.min(3, 1+Math.floor(d/6));
+            for(let k=0;k<n;k++){ const p=toNdc(e.clientX,e.clientY); spawn(p.x,p.y,rand(-0.006,0.006),rand(-0.006,0.004),rand(0.7,1.6),1,rand(0.02,0.05),rand(0.6,1)); }
+          }
+        }
+        lx=e.clientX; ly=e.clientY;
+      }
+    }
+    function onPointerDown(e){
+      const p=toNdc(e.clientX,e.clientY);
+      const sp2 = THEMES[curTheme].spark;
+      const ringN = FINE?16:10;
+      for(let k=0;k<ringN;k++){ const an=k/ringN*Math.PI*2, sp=rand(0.01,0.028); spawn(p.x,p.y,Math.cos(an)*sp,Math.sin(an)*sp,rand(1.0,2.0),1,rand(0.02,0.04),rand(sp2[0],sp2[1])); }
+      for(let k=0;k<10;k++){ const an=Math.random()*Math.PI*2, sp=rand(0.008,0.03); spawn(p.x,p.y,Math.cos(an)*sp,Math.sin(an)*sp,rand(0.8,1.6),1,rand(0.03,0.06),rand(sp2[0],sp2[1])); }
+      AudioFX.tick();
+    }
+    window.addEventListener('pointermove', onPointerMove, {passive:true});
+    window.addEventListener('pointerdown', onPointerDown, {passive:true});
+
+    function size(){
+      cv.width = Math.floor(window.innerWidth*DPR);
+      cv.height = Math.floor(window.innerHeight*DPR);
+      gl.viewport(0,0,cv.width,cv.height);
+      aspect = window.innerWidth/Math.max(1,window.innerHeight);
+    }
+    window.addEventListener('resize', size, {passive:true});
+
+    size();
+    document.body.classList.add('webgl');
+    rafId = requestAnimationFrame(frame);
+
+    // stop loop cleanly if a runtime error occurs (fall back to CSS bg)
+    window.addEventListener('error', function(ev){ if(ev && ev.target===cv){ document.body.classList.remove('webgl'); cancelAnimationFrame(rafId); } });
+  }catch(e){ catchGL(e); }
+})();
+
+/* ============================================================
+   CUSTOM CURSOR (cyber crosshair + ring)
+   ============================================================ */
+(function cursor(){
+  if(!FINE) return;
+  const cur = $('cur');
+  document.body.classList.add('has-cursor');
+  let mx=innerWidth/2, my=innerHeight/2, rx=mx, ry=my, raf=null;
+  window.addEventListener('pointermove', function(e){
+    mx=e.clientX; my=e.clientY;
+    if(raf) return;
+    (function loop(){
+      rx += (mx-rx)*0.22; ry += (my-ry)*0.22;
+      cur.style.transform = 'translate('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px)';
+      const cross = cur.querySelector('.cross');
+      cross.style.transform = 'translate('+(mx-rx).toFixed(1)+'px,'+(my-ry).toFixed(1)+'px)';
+      const moving = Math.abs(mx-rx)>0.05 || Math.abs(my-ry)>0.05;
+      raf = moving ? requestAnimationFrame(loop) : null;
+    })();
+  }, {passive:true});
+  function hov(on){ cur.classList.toggle('hov', on); }
+  document.addEventListener('mouseover', function(e){ hov(!!(e.target.closest && e.target.closest('a,button,.tab,.mx,.enter,.matrix,.snd'))); }, {passive:true});
+  window.addEventListener('pointerdown', function(){ cur.classList.add('drag'); }, {passive:true});
+  window.addEventListener('pointerup', function(){ cur.classList.remove('drag'); }, {passive:true});
+})();
+
+/* ============================================================
+   3D TILT + MAGNETIC HOVER + SPOTLIGHT (node cards & button)
+   ============================================================ */
+(function tilt(){
+  if(REDUCED || !FINE) return;
+  function bind(el){
+    el.addEventListener('pointermove', function(e){
+      const r = el.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      const dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+      el.style.setProperty('--sx',(px*100).toFixed(1)+'%');
+      el.style.setProperty('--sy',(py*100).toFixed(1)+'%');
+      const rx=(py-0.5)*-8, ry=(px-0.5)*8, mX=dx*0.06, mY=dy*0.06;
+      el.style.transform = 'perspective(700px) translate('+mX.toFixed(1)+'px,'+mY.toFixed(1)+'px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+    });
+    el.addEventListener('pointerleave', function(){
+      el.style.setProperty('--sx','50%'); el.style.setProperty('--sy','50%');
+      el.style.transform = '';
+    });
+  }
+  document.querySelectorAll('.tab,.mx,.enter').forEach(bind);
+})();
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+const prog = $('prog');
+function updProg(){
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.transform = 'scaleX(' + (max>0 ? window.scrollY/max : 0) + ')';
+}
+window.addEventListener('scroll', updProg, {passive:true});
+updProg();
+
+/* ============================================================
+   ENTRANCE / SCROLL REVEAL (with failsafe)
+   ============================================================ */
+let io;
+function startReveal(){
+  if(io) return;
+  let els = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  els.forEach(function(el){ const r=el.getBoundingClientRect(); if(r.top<window.innerHeight && r.bottom>0){ el.classList.add('in'); } });
+  if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('in'); }); return; }
+  let ioFired=false;
+  io = new IntersectionObserver(function(entries){
+    ioFired=true;
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(el){ if(!el.classList.contains('in')) io.observe(el); });
+  setTimeout(function(){ if(!ioFired){ els.forEach(function(el){ el.classList.add('in'); }); } }, 1500);
+}
+
+/* ============================================================
+   BOOT SHELL (ULTRA: glitch tear + typewriter + staged reveal)
+   ============================================================ */
+const bootEl = $('boot'), bootBar = $('bootBar'), bootStatus = $('bootStatus'),
+      bootLine = $('bootLine'), bootBrand = $('bootBrand');
+const STATUSES = ['BOOTING KERNEL','LOADING UPLINK','CALIBRATING NODES','LINKING NETWORK','RENDER CORE'];
+let bootDone = false;
+function typeWriter(text, onChange){
+  return new Promise(function(res){
+    let i=0;
+    const iv = setInterval(function(){ i++; onChange(text.slice(0,i)); if(i>=text.length){ clearInterval(iv); res(); } }, 24);
+  });
+}
+function finishBoot(){
+  if(bootDone) return;
+  bootDone = true;
+  bootBar.style.width = '100%';
+  bootStatus.textContent = 'SYSTEM READY';
+  AudioFX.ready();
+  bootEl.classList.add('done');
+  document.body.classList.remove('lock');
+  startReveal();
+  setTimeout(function(){ if(bootEl && bootEl.parentNode) bootEl.remove(); }, 760);
+}
+function skipBoot(){ finishBoot(); }
+bootEl.addEventListener('pointerdown', skipBoot);
+$('bootSkip').addEventListener('click', function(ev){ ev.stopPropagation(); skipBoot(); });
+function runBoot(){
+  document.body.classList.add('lock');
+  bootBar.style.width='0%'; bootStatus.textContent=STATUSES[0];
+  if(REDUCED){ finishBoot(); return; }
+  const t0=performance.now(), dur=1700;
+  const iv=setInterval(function(){
+    if(bootDone){ clearInterval(iv); return; }
+    const p=Math.min(100,(performance.now()-t0)/dur*100);
+    bootBar.style.width=p+'%';
+    const idx=Math.min(Math.floor(p/25),STATUSES.length-1);
+    if(bootStatus.textContent!==STATUSES[idx]){ bootStatus.textContent=STATUSES[idx]; AudioFX.stage(); }
+    if(p>=100){ clearInterval(iv); finishBoot(); }
+  }, 36);
+  typeWriter('CYBER TRANSPORT · NODE GATEWAY', function(s){ bootLine.textContent=s; });
+}
+runBoot();
+
+/* ============================================================
+   INIT
+   ============================================================ */
+$('yy').textContent = new Date().getFullYear();
+initSndBtn();
+applyMode();
+
+document.addEventListener('visibilitychange', function(){ paused = document.hidden; }, false);
+</script>
+</body>
+</html>
